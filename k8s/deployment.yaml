@@ -1,4 +1,4 @@
-apiVersion: apps/v2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
@@ -13,7 +13,6 @@ spec:
     matchLabels:
       app: api
   template:
-  template:
     metadata:
       labels:
         app: api
@@ -25,7 +24,7 @@ spec:
             - containerPort: 8000
           env:
             - name: APP_VERSION
-              value: "v1"
+              value: "v2"
           readinessProbe:
             httpGet:
               path: /health
