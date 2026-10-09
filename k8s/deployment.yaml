@@ -1,10 +1,8 @@
-apiVersion: apps/v1
+apiVersion: apps/v2
 kind: Deployment
 metadata:
   name: api
 spec:
-  replicas: 3
-  spec:
   replicas: 3
   strategy:
     type: RollingUpdate
@@ -12,9 +10,9 @@ spec:
       maxUnavailable: 0
       maxSurge: 1
   selector:
-  selector:
     matchLabels:
       app: api
+  template:
   template:
     metadata:
       labels:
