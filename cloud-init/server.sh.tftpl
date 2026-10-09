@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+
+# Update the OS
+apt-get update -y
+apt-get upgrade -y -o Dpkg::Options::="--force-confold"
+
+# Log k3s in to ECR using the server's IAM role
+snap install aws-cli --classic
+ECR_PASSWORD=$(/snap/bin/aws ecr get-login-password --region us-east-1)
+mkdir -p /etc/rancher/k3s
+cat > /etc/rancher/k3s/registries.yaml <<EOF
+configs:
+  "${ecr_registry}":
+    auth:
+      username: AWS
+      password: $ECR_PASSWORD
+EOF
+chmod 600 /etc/rancher/k3s/registries.yaml
+
+# Install k3s as the cluster SERVER
+curl -sfL https://get.k3s.io | K3S_TOKEN="${k3s_token}" sh -s - server
